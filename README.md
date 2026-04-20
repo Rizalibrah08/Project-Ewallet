@@ -37,32 +37,50 @@ A beautifully designed, modern digital wallet frontend application built with **
 
 Follow these steps to run the UI locally on your machine:
 
-1. **Install Dependencies**:
+1. **Clone the repository** (if you haven't already):
+   ```bash
+   git clone https://github.com/Rizalibrah08/Project-Ewallet.git
+   cd Project-Ewallet
+   ```
+
+2. **Navigate to the frontend project root**:
+   ```bash
+   cd fullstak
+   ```
+
+3. **Install Dependencies**:
    ```bash
    npm install
    ```
 
-2. **Start the Expo Development Server**:
+4. **Start the Expo Development Server**:
    ```bash
    npx expo start
    ```
 
-3. **View the App**:
+5. **View the App**:
    Press `w` to open in the web browser, `a` to open in an Android Emulator, or `i` for iOS Simulator.
 
 ## 📂 Project Structure
 
 ```text
-app/
-├── _layout.tsx         # Root layout configuration
-├── index.tsx           # Login Screen (Entry point)
-├── register.tsx        # Registration Screen
-├── (tabs)/             # Tabbed Navigation structure
-│   ├── _layout.tsx     # Custom Tab Bar layout styling
-│   ├── index.tsx       # Main Dashboard UI
-│   ├── history.tsx     # History Tab (Placeholder)
-│   ├── scan.tsx        # Main Scan button (Placeholder)
-│   ├── cards.tsx       # Cards Tab (Placeholder)
-│   └── profile.tsx     # Profile Tab (Placeholder)
-components/             # Reusable UI components
+fullstak/
+├── app/
+│   ├── _layout.tsx         # Root layout configuration
+│   ├── index.tsx           # Login Screen (Entry point)
+│   ├── register.tsx        # Registration Screen
+│   ├── (tabs)/             # Tabbed Navigation structure
+│   │   ├── _layout.tsx     # Custom Tab Bar layout styling
+│   │   ├── index.tsx       # Main Dashboard UI
+│   │   ├── history.tsx     # History Tab (Placeholder)
+│   │   ├── scan.tsx        # Main Scan button (Placeholder)
+│   │   ├── cards.tsx       # Cards Tab (Placeholder)
+│   │   └── profile.tsx     # Profile Tab (Placeholder)
+└── components/             # Reusable UI components
 ```
+
+## 🤝 Contribution
+Feel free to fork this project and submit a Pull Request if you'd like to improve the UI or integrate backend connectivity.
+
+---
+*Developed for Project E-Wallet Mobile Programming block.*
