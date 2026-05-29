@@ -6,11 +6,13 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { getWallet, getRecentTransactions } from '../../services/api';
+import { getUserSession, UserData } from '../../services/storage';
 
 export default function DashboardScreen() {
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -19,7 +21,10 @@ export default function DashboardScreen() {
 
   const fetchData = async () => {
     try {
-      const [wallets, txs] = await Promise.all([getWallet(), getRecentTransactions()]);
+      const session = await getUserSession();
+      const userId = session?.userId || 1;
+      if (session?.userData) setUserData(session.userData);
+      const [wallets, txs] = await Promise.all([getWallet(userId), getRecentTransactions(userId)]);
       if (wallets.length > 0) setBalance(wallets[0].balance);
       setTransactions(txs);
     } catch (e) {
@@ -50,10 +55,10 @@ export default function DashboardScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.profileSection}>
-            <Image source={{ uri: 'https://i.pravatar.cc/150?img=11' }} style={styles.avatar} />
+            <Image source={{ uri: userData?.avatar || 'https://i.pravatar.cc/150?img=11' }} style={styles.avatar} />
             <View style={styles.greetingContainer}>
               <Text style={styles.greetingText}>Selamat Datang,</Text>
-              <Text style={styles.nameText}>Rizal!</Text>
+              <Text style={styles.nameText}>{userData?.name || 'User'}!</Text>
             </View>
           </View>
           <TouchableOpacity style={styles.bellButton}>

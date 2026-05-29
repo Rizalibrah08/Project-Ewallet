@@ -6,6 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { login } from '../services/api';
+import { saveUserSession } from '../services/storage';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -23,6 +24,7 @@ export default function LoginScreen() {
     try {
       const users = await login(email, password);
       if (users.length > 0) {
+        await saveUserSession(users[0].id, users[0]);
         router.push('/(tabs)');
       } else {
         Alert.alert('Login Gagal', 'Email tidak ditemukan');

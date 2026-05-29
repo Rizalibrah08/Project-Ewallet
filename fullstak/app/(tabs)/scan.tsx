@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Platform, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createTransaction, getWallet, updateWallet } from '../../services/api';
+import { getUserSession } from '../../services/storage';
 
 export default function ScanScreen() {
   const [loading, setLoading] = useState(false);
@@ -9,14 +10,16 @@ export default function ScanScreen() {
   const handleSimulatePayment = async () => {
     setLoading(true);
     try {
-      const wallets = await getWallet();
+      const session = await getUserSession();
+      const userId = session?.userId || 1;
+      const wallets = await getWallet(userId);
       const wallet = wallets[0];
       const paymentAmount = 25000;
       if (wallet.balance < paymentAmount) {
         Alert.alert('Gagal', 'Saldo tidak cukup');
         return;
       }
-      await createTransaction({ userId: 1, title: 'QR Payment - Merchant', date: new Date().toISOString(), amount: -paymentAmount, type: 'QR PAYMENT', iconName: 'qr-code' });
+      await createTransaction({ userId, title: 'QR Payment - Merchant', date: new Date().toISOString(), amount: -paymentAmount, type: 'QR PAYMENT', iconName: 'qr-code' });
       await updateWallet(wallet.id, wallet.balance - paymentAmount);
       Alert.alert('Pembayaran Berhasil', `Rp ${paymentAmount.toLocaleString('id-ID')} telah dibayarkan via QR`);
     } catch {

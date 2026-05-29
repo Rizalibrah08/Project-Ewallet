@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, Platform, Image, TouchableOpacity
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { getProfile } from '../../services/api';
+import { getUserSession, clearUserSession } from '../../services/storage';
 
 export default function ProfileScreen() {
   const [user, setUser] = useState<any>(null);
@@ -10,7 +11,14 @@ export default function ProfileScreen() {
   const router = useRouter();
 
   useEffect(() => {
-    getProfile().then(setUser).finally(() => setLoading(false));
+    getUserSession().then((session) => {
+      if (session) {
+        setUser(session.userData);
+        setLoading(false);
+      } else {
+        getProfile().then(setUser).finally(() => setLoading(false));
+      }
+    });
   }, []);
 
   if (loading) {
@@ -38,7 +46,7 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={() => router.replace('/')}>
+      <TouchableOpacity style={styles.logoutButton} onPress={async () => { await clearUserSession(); router.replace('/'); }}>
         <Ionicons name="log-out-outline" size={20} color="#EF4444" />
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>

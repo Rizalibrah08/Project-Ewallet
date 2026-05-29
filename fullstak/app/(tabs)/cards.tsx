@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Platform, FlatList, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getCards } from '../../services/api';
+import { getUserSession } from '../../services/storage';
 
 export default function CardsScreen() {
   const [cards, setCards] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getCards().then(setCards).finally(() => setLoading(false));
+    getUserSession().then((session) => {
+      getCards(session?.userId || 1).then(setCards).finally(() => setLoading(false));
+    });
   }, []);
 
   if (loading) {

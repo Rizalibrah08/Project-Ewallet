@@ -6,6 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { register } from '../services/api';
+import { saveUserSession } from '../services/storage';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -28,7 +29,8 @@ export default function RegisterScreen() {
     }
     setLoading(true);
     try {
-      await register({ name, email, phone, password });
+      const newUser = await register({ name, email, phone, password });
+      await saveUserSession(newUser.id, newUser);
       Alert.alert('Berhasil', 'Akun berhasil dibuat!', [
         { text: 'OK', onPress: () => router.push('/(tabs)') }
       ]);

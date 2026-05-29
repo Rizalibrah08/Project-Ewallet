@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Plat
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { createTransaction, getWallet, updateWallet } from '../services/api';
+import { getUserSession } from '../services/storage';
 
 export default function TopUpScreen() {
   const [amount, setAmount] = useState('');
@@ -17,9 +18,11 @@ export default function TopUpScreen() {
     }
     setLoading(true);
     try {
-      const wallets = await getWallet();
+      const session = await getUserSession();
+      const userId = session?.userId || 1;
+      const wallets = await getWallet(userId);
       const wallet = wallets[0];
-      await createTransaction({ userId: 1, title: 'Top Up Saldo', date: new Date().toISOString(), amount: numAmount, type: 'TOP UP', iconName: 'add-circle' });
+      await createTransaction({ userId, title: 'Top Up Saldo', date: new Date().toISOString(), amount: numAmount, type: 'TOP UP', iconName: 'add-circle' });
       await updateWallet(wallet.id, wallet.balance + numAmount);
       Alert.alert('Berhasil', `Top Up Rp ${numAmount.toLocaleString('id-ID')} berhasil!`, [
         { text: 'OK', onPress: () => router.back() }

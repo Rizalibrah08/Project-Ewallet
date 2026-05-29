@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, Platform, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getTransactions } from '../../services/api';
+import { getUserSession } from '../../services/storage';
 
 export default function HistoryScreen() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getTransactions().then(setTransactions).finally(() => setLoading(false));
+    getUserSession().then((session) => {
+      getTransactions(session?.userId || 1).then(setTransactions).finally(() => setLoading(false));
+    });
   }, []);
 
   const formatCurrency = (num: number) => Math.abs(num).toLocaleString('id-ID');

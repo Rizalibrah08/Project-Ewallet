@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Plat
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { createTransaction, getWallet, updateWallet } from '../services/api';
+import { getUserSession } from '../services/storage';
 
 export default function TransferScreen() {
   const [recipient, setRecipient] = useState('');
@@ -18,13 +19,15 @@ export default function TransferScreen() {
     }
     setLoading(true);
     try {
-      const wallets = await getWallet();
+      const session = await getUserSession();
+      const userId = session?.userId || 1;
+      const wallets = await getWallet(userId);
       const wallet = wallets[0];
       if (wallet.balance < numAmount) {
         Alert.alert('Error', 'Saldo tidak cukup');
         return;
       }
-      await createTransaction({ userId: 1, title: `Transfer ke ${recipient}`, date: new Date().toISOString(), amount: -numAmount, type: 'TRANSFER', iconName: 'paper-plane' });
+      await createTransaction({ userId, title: `Transfer ke ${recipient}`, date: new Date().toISOString(), amount: -numAmount, type: 'TRANSFER', iconName: 'paper-plane' });
       await updateWallet(wallet.id, wallet.balance - numAmount);
       Alert.alert('Berhasil', `Transfer Rp ${numAmount.toLocaleString('id-ID')} ke ${recipient}`, [
         { text: 'OK', onPress: () => router.back() }
