@@ -1,30 +1,54 @@
 # Yume E-Wallet 🌸
 
-A beautifully designed, modern digital wallet frontend application built with **React Native** and **Expo Router**. The user interface prioritizes clean layout, subtle gradients, and intuitive navigation, making it perfect as a foundational boilerplate for financial applications.
+A beautifully designed, modern digital wallet application built with **React Native**, **Expo Router**, and integrated with a **JSON Server** mock REST API for full CRUD functionality.
 
 ## 📱 Features
 
-### 1. Authentication Flow
+### 1. Authentication Flow (API Integrated)
 - **Login Screen** (`app/index.tsx`):
-  - Clean card-based interface for user credentials.
-  - Password visibility toggle.
-  - Social login placeholders (Google & Apple).
+  - Validates user credentials against the API (`GET /users?email=...`)
+  - Loading state & error handling
+  - Social login placeholders (Google & Apple)
 - **Registration Screen** (`app/register.tsx`):
-  - Seamless form inputs requesting Full Name, Email, Mobile and Password.
-  - Custom responsive Terms & Conditions checkbox.
+  - Registers new user via API (`POST /users`)
+  - Form validation & Terms checkbox
 
-### 2. Dashboard Interface
-- **Custom Tab Navigation** (`app/(tabs)/_layout.tsx`):
-  - Bespoke curved bottom tab bar.
-  - Tall highlight state for the Home tab.
-  - Centered, floating "Scan" (QR) button mimicking modern fintech UI.
+### 2. Dashboard Interface (API Integrated)
 - **YUME Balance Card** (`app/(tabs)/index.tsx`):
-  - Elegant primary gradient card displaying the user balance.
-  - Embedded quick actions for **Top Up** and **Transfer**.
-- **Transaction Overview**:
-  - Scrollable, auto-sizing list for "Recent Transactions".
-  - Color-coded transaction values (Green for received income, Black/Gray for expenses).
-  - Dynamic categorization labels.
+  - Fetches real-time balance from API (`GET /wallets`)
+  - Quick actions: **Top Up** & **Transfer** navigate to dedicated forms
+- **Recent Transactions**:
+  - Fetched from API (`GET /transactions?_sort=id&_order=desc&_limit=5`)
+  - Color-coded values (Green = income, Red = expense)
+
+### 3. Transaction History (API Integrated)
+- **History Screen** (`app/(tabs)/history.tsx`):
+  - Full transaction list from API (`GET /transactions`)
+  - Formatted dates, amounts, and category labels
+
+### 4. Transfer & Top Up (API Integrated)
+- **Transfer Screen** (`app/transfer.tsx`):
+  - Form with recipient & amount fields
+  - Creates transaction & updates wallet balance via API
+- **Top Up Screen** (`app/topup.tsx`):
+  - Amount input with preset quick-select buttons (50K, 100K, 200K, 500K)
+  - Creates transaction & updates wallet balance via API
+
+### 5. QR Scan & Pay (API Integrated)
+- **Scan Screen** (`app/(tabs)/scan.tsx`):
+  - QR code placeholder UI
+  - "Simulate Payment" button that creates a transaction via API
+
+### 6. Cards (API Integrated)
+- **Cards Screen** (`app/(tabs)/cards.tsx`):
+  - Fetches card list from API (`GET /cards`)
+  - Displays VISA/Mastercard with masked numbers, holder name, expiry
+
+### 7. Profile (API Integrated)
+- **Profile Screen** (`app/(tabs)/profile.tsx`):
+  - Fetches user data from API (`GET /users/1`)
+  - Displays name, email, phone, avatar
+  - Logout button
 
 ## 🛠 Tech Stack
 
@@ -32,55 +56,84 @@ A beautifully designed, modern digital wallet frontend application built with **
 - **Routing:** [Expo Router](https://docs.expo.dev/router/introduction/)
 - **Icons:** `Ionicons` (via `@expo/vector-icons`)
 - **Styling:** React Native `StyleSheet`
+- **Mock API:** [JSON Server](https://github.com/typicode/json-server) v0.17.4
 
 ## 🚀 Getting Started
 
-Follow these steps to run the UI locally on your machine:
+### Prerequisites
+- Node.js installed
+- Expo CLI (`npx expo`)
+- Device/emulator connected to the same WiFi as your computer
 
-1. **Clone the repository** (if you haven't already):
-   ```bash
-   git clone https://github.com/Rizalibrah08/Project-Ewallet.git
-   cd Project-Ewallet
-   ```
+### Setup
 
-2. **Navigate to the frontend project root**:
+1. **Navigate to the project root**:
    ```bash
    cd fullstak
    ```
 
-3. **Install Dependencies**:
+2. **Install Dependencies**:
    ```bash
    npm install
    ```
 
-4. **Start the Expo Development Server**:
+3. **Configure API URL** (for physical device):
+   - Run `ipconfig` (Windows) or `ifconfig` (Mac/Linux) to find your WiFi IP
+   - Open `services/api.ts` and replace `192.168.1.1` with your IP address
+
+4. **Start JSON Server** (Terminal 1):
+   ```bash
+   npm run server
+   ```
+   API will be available at `http://<your-ip>:3000`
+
+5. **Start Expo** (Terminal 2):
    ```bash
    npx expo start
    ```
 
-5. **View the App**:
-   Press `w` to open in the web browser, `a` to open in an Android Emulator, or `i` for iOS Simulator.
+6. **Test Login**: Use email `rizal@yume.com` with any password.
+
+## 📡 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/users?email=...` | Login (check user) |
+| POST | `/users` | Register new user |
+| GET | `/users/:id` | Get user profile |
+| GET | `/wallets?userId=1` | Get wallet balance |
+| PATCH | `/wallets/:id` | Update balance |
+| GET | `/transactions?userId=1` | All transactions |
+| GET | `/transactions?...&_limit=5` | Recent transactions |
+| POST | `/transactions` | Create transaction |
+| GET | `/cards?userId=1` | Get user cards |
 
 ## 📂 Project Structure
 
 ```text
 fullstak/
+├── db.json                 # Mock database (JSON Server)
+├── services/
+│   └── api.ts              # API service layer (all fetch functions)
 ├── app/
-│   ├── _layout.tsx         # Root layout configuration
-│   ├── index.tsx           # Login Screen (Entry point)
+│   ├── _layout.tsx         # Root layout (all routes registered)
+│   ├── index.tsx           # Login Screen
 │   ├── register.tsx        # Registration Screen
-│   ├── (tabs)/             # Tabbed Navigation structure
-│   │   ├── _layout.tsx     # Custom Tab Bar layout styling
-│   │   ├── index.tsx       # Main Dashboard UI
-│   │   ├── history.tsx     # History Tab (Placeholder)
-│   │   ├── scan.tsx        # Main Scan button (Placeholder)
-│   │   ├── cards.tsx       # Cards Tab (Placeholder)
-│   │   └── profile.tsx     # Profile Tab (Placeholder)
-└── components/             # Reusable UI components
+│   ├── transfer.tsx        # Transfer form
+│   ├── topup.tsx           # Top Up form
+│   └── (tabs)/
+│       ├── _layout.tsx     # Custom Tab Bar
+│       ├── index.tsx       # Dashboard (balance + transactions)
+│       ├── history.tsx     # Full transaction history
+│       ├── scan.tsx        # QR Scan & simulate payment
+│       ├── cards.tsx       # Card list
+│       └── profile.tsx     # User profile + logout
+├── components/             # Reusable UI components
+└── package.json            # Scripts: start, server, android, ios, web
 ```
 
 ## 🤝 Contribution
-Feel free to fork this project and submit a Pull Request if you'd like to improve the UI or integrate backend connectivity.
+Feel free to fork this project and submit a Pull Request if you'd like to improve the UI or integrate a real backend.
 
 ---
-*Developed for Project E-Wallet Mobile Programming block.*
+*Developed for Project E-Wallet Mobile Programming course.*

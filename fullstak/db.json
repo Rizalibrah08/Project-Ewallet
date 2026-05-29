@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Rizal",
+      "email": "rizal@yume.com",
+      "phone": "+62 812-3456-7890",
+      "password": "123456",
+      "avatar": "https://i.pravatar.cc/150?img=11"
+    }
+  ],
+  "wallets": [
+    {
+      "id": 1,
+      "userId": 1,
+      "balance": 4750000
+    }
+  ],
+  "transactions": [
+    { "id": 1, "userId": 1, "title": "Spotify", "date": "2024-08-14T09:41:00", "amount": -55000, "type": "SUBSCRIPTION", "iconName": "musical-notes" },
+    { "id": 2, "userId": 1, "title": "GrabFood", "date": "2024-08-13T19:20:00", "amount": -72000, "type": "FOOD DELIVERY", "iconName": "restaurant" },
+    { "id": 3, "userId": 1, "title": "Transfer dari Sora", "date": "2024-08-12T14:05:00", "amount": 200000, "type": "RECEIVED", "iconName": "wallet" },
+    { "id": 4, "userId": 1, "title": "Kopi Kenangan", "date": "2024-08-10T08:15:00", "amount": -35000, "type": "COFFEE", "iconName": "cafe" },
+    { "id": 5, "userId": 1, "title": "Netflix", "date": "2024-08-08T10:00:00", "amount": -186000, "type": "STREAMING", "iconName": "film" },
+    { "id": 6, "userId": 1, "title": "Gaji Bulanan", "date": "2024-08-01T09:00:00", "amount": 8500000, "type": "SALARY", "iconName": "cash" },
+    { "id": 7, "userId": 1, "title": "Starbucks", "date": "2024-07-30T15:20:00", "amount": -65000, "type": "FOOD & DRINK", "iconName": "cafe" },
+    { "id": 8, "userId": 1, "title": "Cashback Promo", "date": "2024-07-28T11:45:00", "amount": 15000, "type": "REWARD", "iconName": "gift" }
+  ],
+  "cards": [
+    { "id": 1, "userId": 1, "cardNumber": "4532XXXXXXXX7890", "cardHolder": "RIZAL IBRAHIM", "expiry": "12/27", "type": "VISA", "color": "#4C51C6" },
+    { "id": 2, "userId": 1, "cardNumber": "5412XXXXXXXX3456", "cardHolder": "RIZAL IBRAHIM", "expiry": "08/26", "type": "MASTERCARD", "color": "#1A1A2E" }
+  ]
+}
